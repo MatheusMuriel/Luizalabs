@@ -19,7 +19,7 @@ class User(Document):
     name = "user"
 
 
-class UserSignIn(HTTPBasicCredentials):
+class UserLogin(HTTPBasicCredentials):
   class Config:
     json_schema_extra = {
       "example": {"login": "admin", "password": "admin"}
