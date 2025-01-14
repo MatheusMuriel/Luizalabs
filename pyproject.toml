@@ -5,6 +5,7 @@ description = "Desafio Técnico Luizalabs"
 authors = ["Matheus Muriel <matheus.muriel@outlook.com>"]
 license = "GPLv3"
 readme = "README.md"
+package-mode = false 
 
 [tool.poetry.dependencies]
 python = "^3.13"
