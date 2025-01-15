@@ -14,10 +14,11 @@ uvicorn = "^0.34.0"
 beanie = "^1.29.0"
 pydantic-settings = "^2.7.1"
 pyjwt = "^2.10.1"
-flake8 = "^7.1.1"
-isort = "^5.13.2"
 pydantic = {extras = ["email"], version = "^2.10.5"}
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]

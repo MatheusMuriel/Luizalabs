@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, Any
+from typing import Any, Optional
+
 from beanie import Document
+from pydantic import BaseModel, EmailStr
 
 
 class Client(Document):

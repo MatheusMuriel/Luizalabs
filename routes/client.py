@@ -41,7 +41,7 @@ async def get_client_data(id: int):
         id (int): The ID of the client to retrieve.
 
     Returns:
-        dict: A dictionary containing the status code, response type, 
+        dict: A dictionary containing the status code, response type,
         description, and the client data if found, or an error message if not.
     """
     client = await DatabaseClient.get_client(id)
