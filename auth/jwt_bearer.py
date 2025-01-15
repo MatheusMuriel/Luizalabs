@@ -3,6 +3,9 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from .jwt_handler import decode_jwt
 
+from resources.resources import ResourceManager
+resources = ResourceManager()
+
 
 def verify_jwt(jwtoken: str) -> bool:
     """
@@ -39,7 +42,7 @@ class JWTBearer(HTTPBearer):
         Returns:
             str: The JWT token if authentication is successful.
         Raises:
-            HTTPException: Status code 403 if the authentication fails due to
+            HTTPException: Status code 401 if the authentication fails due to
             an invalid credentials scheme, invalid token or missing token.
         """
 
@@ -47,21 +50,16 @@ class JWTBearer(HTTPBearer):
             await super(JWTBearer, self).__call__(request)
 
         if credentials:
-            if not credentials.scheme == "Bearer":
-                raise HTTPException(
-                    status_code=403,
-                    detail="Invalid authentication token"
-                )
-
-            if not verify_jwt(credentials.credentials):
-                raise HTTPException(
-                    status_code=403,
-                    detail="Invalid token or expired token"
-                )
+            if credentials.scheme == "Bearer":
+                if not verify_jwt(credentials.credentials):
+                    raise HTTPException(
+                        status_code=401,
+                        detail=resources.get("auth.invalid_token")
+                    )
 
             return credentials.credentials
         else:
             raise HTTPException(
                 status_code=403,
-                detail="Invalid authorization token"
+                detail=resources.get("auth.not_authenticated")
             )

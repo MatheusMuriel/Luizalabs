@@ -1,0 +1,11 @@
+{
+  "auth": {
+    "login_failure": "Incorrect username or password",
+    "not_authenticated": "Not authenticated",
+    "invalid_token": "Invalid token or expired token"
+  },
+  "errors": {
+    "not_found": "The requested resource was not found.",
+    "server_error": "An unexpected error occurred. Please try again later."
+  }
+}

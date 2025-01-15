@@ -3,7 +3,9 @@ from fastapi import APIRouter, Body, HTTPException
 from auth.jwt_handler import sign_jwt
 from config.config import Settings
 from models.user import UserLogin
+from resources.resources import ResourceManager
 
+resources = ResourceManager()
 router = APIRouter()
 
 
@@ -33,6 +35,6 @@ async def user_login(user_credentials: UserLogin = Body(...)):
         return sign_jwt(user_credentials.username)
 
     raise HTTPException(
-        status_code=403,
-        detail="Incorrect username or password"
+        status_code=401,
+        detail=resources.get("auth.login_failure")
     )

@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     A class to manage application settings using environment variables.
 
     Attributes:
-        DATABASE_URL (str): The database connection URL.
+        DATABASE_URL (str): The MongoDB database connection URL.
         SECRET_KEY (str): The secret key for signing JWT tokens.
         EXPIRE_TIME (int): The expiration time for JWT tokens (in seconds).
         TOKEN_ALGORITHM (str): The algorithm used for signing JWT tokens.
