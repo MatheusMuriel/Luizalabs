@@ -29,7 +29,7 @@ class JWTBearer(HTTPBearer):
         Initializes the JWTBearer instance.
         """
 
-        super(JWTBearer, self)
+        super(JWTBearer, self).__init__()
 
     async def __call__(self, request: Request):
         """

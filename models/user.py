@@ -3,13 +3,13 @@ from fastapi.security import HTTPBasicCredentials
 
 
 class User(Document):
-    login: str
+    username: str
     password: str
 
     class Config:
         json_schema_extra = {
             "example": {
-                "login": "admin",
+                "username": "admin",
                 "password": "admin",
             }
         }
@@ -21,5 +21,5 @@ class User(Document):
 class UserLogin(HTTPBasicCredentials):
     class Config:
         json_schema_extra = {
-            "example": {"login": "admin", "password": "admin"}
+            "example": {"username": "admin", "password": "admin"}
         }

@@ -16,6 +16,7 @@ pydantic-settings = "^2.7.1"
 pyjwt = "^2.10.1"
 flake8 = "^7.1.1"
 isort = "^5.13.2"
+pydantic = {extras = ["email"], version = "^2.10.5"}
 
 
 [build-system]

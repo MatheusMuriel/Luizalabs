@@ -33,6 +33,6 @@ async def user_login(user_credentials: UserLogin = Body(...)):
         return sign_jwt(user_credentials.username)
 
     raise HTTPException(
-        status_code=403, 
+        status_code=403,
         detail="Incorrect username or password"
     )
