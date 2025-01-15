@@ -4,6 +4,7 @@ from auth.jwt_bearer import JWTBearer
 from config.config import initiate_database, shutdown_database
 from routes.client import router as ClientRouter
 from routes.user import router as UserRouter
+from routes.product import router as ProductRouter
 
 app = FastAPI()
 token_listener = JWTBearer()
@@ -20,6 +21,11 @@ def include_routers():
     app.include_router(
         ClientRouter,
         prefix="/client",
+        dependencies=[Depends(token_listener)]
+    )
+    app.include_router(
+        ProductRouter,
+        prefix="/product",
         dependencies=[Depends(token_listener)]
     )
 
