@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.get(
     path="/",
-    response_description="Clientes retrieved",
+    response_description="Clients retrieved",
     response_model=Response
 )
 async def get_clients():
@@ -23,14 +23,14 @@ async def get_clients():
     return {
         "status_code": 200,
         "response_type": "success",
-        "description": "Clientes data retrieved successfully",
+        "description": "Clients data retrieved successfully",
         "data": clients,
     }
 
 
 @router.get(
     path="/{id}",
-    response_description="Cliente data retrieved",
+    response_description="Client data retrieved",
     response_model=Response
 )
 async def get_client_data(id: int):
@@ -49,20 +49,20 @@ async def get_client_data(id: int):
         return {
             "status_code": 200,
             "response_type": "success",
-            "description": "Cliente data retrieved successfully",
+            "description": "Client data retrieved successfully",
             "data": client,
         }
     return {
         "status_code": 404,
         "response_type": "error",
-        "description": "Cliente doesn't exist",
+        "description": "Client doesn't exist",
     }
 
 
 # Create Cliente
 @router.post(
     path="/",
-    response_description="Cliente registrado",
+    response_description="Client registred",
     response_model=Response
 )
 async def add_client_data(client: Client = Body(...)):
@@ -83,21 +83,21 @@ async def add_client_data(client: Client = Body(...)):
     if client_exists:
         raise HTTPException(
             status_code=409,
-            detail="Cliente with this email supplied already exists"
+            detail="Client with this email supplied already exists"
         )
 
     new_client = await DatabaseClient.add_client(client)
     return {
         "status_code": 200,
         "response_type": "success",
-        "description": "Cliente created successfully",
+        "description": "Client created successfully",
         "data": new_client,
     }
 
 
 @router.delete(
     path="/{id}",
-    response_description="Cliente data deleted from the database"
+    response_description="Client data deleted from the database"
 )
 async def delete_client_data(id: int):
     """
@@ -116,13 +116,13 @@ async def delete_client_data(id: int):
         return {
             "status_code": 200,
             "response_type": "success",
-            "description": "Cliente with ID: {} removed".format(id),
+            "description": "Client with ID: {} removed".format(id),
             "data": deleted_client,
         }
     return {
         "status_code": 404,
         "response_type": "error",
-        "description": "Cliente with id {0} doesn't exist".format(id),
+        "description": "Client with id {0} doesn't exist".format(id),
         "data": False,
     }
 
@@ -149,12 +149,12 @@ async def update_client(id: int, req: UpdateClientModel = Body(...)):
         return {
             "status_code": 200,
             "response_type": "success",
-            "description": f"Cliente with ID: {id} updated",
+            "description": f"Client with ID: {id} updated",
             "data": updated_client,
         }
     return {
         "status_code": 404,
         "response_type": "error",
-        "description": f"An error occurred. Cliente with ID: {id} not found",
+        "description": f"An error occurred. Client with ID: {id} not found",
         "data": False,
     }
