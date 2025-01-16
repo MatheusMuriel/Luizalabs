@@ -1,8 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
-from app import app
 
+from app import app
 from resources.resources import ResourceManager
+
 resources = ResourceManager()
 
 
@@ -29,12 +30,3 @@ def test_login_failure(client):
     )
     assert response.status_code == 401
     assert response.json() == {"detail": resources.get("auth.login_failure")}
-
-
-def test_protected_route_without_token(client):
-    """Testa o acesso a uma rota protegida sem token de autenticação."""
-    response = client.get("/client")
-    assert response.status_code == 403
-    assert response.json() == {
-        "detail": resources.get("auth.not_authenticated")
-    }

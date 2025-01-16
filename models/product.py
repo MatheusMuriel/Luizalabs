@@ -1,4 +1,5 @@
-from typing import Optional, List, Any, Union
+from typing import Any, List, Optional, Union
+
 from beanie import Document, Indexed
 from pydantic import BaseModel
 

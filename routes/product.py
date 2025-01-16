@@ -154,12 +154,16 @@ async def update_product(id_product: int, req: UpdateProductModel = Body(...)):
         description, and updated product data if successful. If not, an
         error message is returned.
     """
-    updated_product = await DatabaseProduct.update_product_data(id_product, req.dict())
+    updated_product = await DatabaseProduct.update_product_data(
+        id_product, req.dict()
+    )
     if updated_product:
         return {
             "status_code": 200,
             "response_type": resources.get("requests.success"),
-            "description": resources.get("product.product_updated").format(id_product),
+            "description": resources
+            .get("product.product_updated")
+            .format(id_product),
             "data": updated_product,
         }
     raise HTTPException(

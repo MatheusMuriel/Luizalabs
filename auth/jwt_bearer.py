@@ -1,9 +1,10 @@
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from resources.resources import ResourceManager
+
 from .jwt_handler import decode_jwt
 
-from resources.resources import ResourceManager
 resources = ResourceManager()
 
 

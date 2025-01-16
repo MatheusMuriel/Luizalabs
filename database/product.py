@@ -1,7 +1,9 @@
-from typing import Union
-from fastapi import HTTPException
-from models.product import Product, PaginatedProducts
 from math import ceil
+from typing import Union
+
+from fastapi import HTTPException
+
+from models.product import PaginatedProducts, Product
 from resources.resources import ResourceManager
 
 resources = ResourceManager()
@@ -100,7 +102,9 @@ async def delete_product(id: int) -> bool:
         return True
 
 
-async def update_product_data(id_product: int, data: dict) -> Union[bool, Product]:
+async def update_product_data(
+    id_product: int, data: dict
+) -> Union[bool, Product]:
     """
     Update a product's data by its ID.
 

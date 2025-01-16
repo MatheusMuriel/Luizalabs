@@ -3,8 +3,8 @@ from fastapi import Depends, FastAPI
 from auth.jwt_bearer import JWTBearer
 from config.config import initiate_database, shutdown_database
 from routes.client import router as ClientRouter
-from routes.user import router as UserRouter
 from routes.product import router as ProductRouter
+from routes.user import router as UserRouter
 
 app = FastAPI()
 token_listener = JWTBearer()

@@ -1,50 +1,33 @@
-import pytest
-# from fastapi.testclient import TestClient
-# from app import app, token_listener
 from resources.resources import ResourceManager
-# import database.product as DatabaseProduct
-
-# import asyncio
-# from beanie import init_beanie
-# from motor.motor_asyncio import AsyncIOMotorClient
-# from config.config import initiate_database, shutdown_database
-# from models.product import Product  # Substitua pelo caminho correto do modelo
-# from tests.conftest import test_client
-# from httpx import AsyncClient
 
 resources = ResourceManager()
-
-
-def test_get(test_client):
-    response = test_client.get("/product/1")
-    assert response.status_code == 200
-    # //Add assertions as needed
-
-
-def test_create_X(test_client):
-    response = test_client.post("/product/", json={
-            "id": 13,
-            "title": "Teste",
-            "price": 100.00,
-            "image": "https://site.com/foto.jpg",
-            "brand": "Marka",
-            "reviewScore": 9.4,
-        }
-    )
-    assert response.status_code == 201
-    # //Add assertions as needed
 
 
 def test_get_products(test_client):
     """
     Testa a listagem de produtos na primeira página.
     """
+    product_data = {
+        "id": 100,
+        "title": "Product 1",
+        "price": 100.0,
+        "image": "https://site.com/foto.jpg",
+        "brand": "Marka 1",
+        "reviewScore": 9.1,
+    }
+    test_client.post(
+        "/product",
+        json=product_data
+    )
     response = test_client.get("/product", params={"page": 1})
     assert response.status_code == 200
     json_response = response.json()
     assert json_response["status_code"] == 200
     assert json_response["response_type"] == resources.get("requests.success")
-    assert json_response["description"] == resources.get("product.product_retrived")
+    assert (
+        json_response["description"]
+        == resources.get("product.product_retrived")
+    )
 
 
 def test_get_invalid_page(test_client):
@@ -61,22 +44,67 @@ def test_get_product_data_existing(test_client):
     """
     Testa a recuperação de dados de um produto existente.
     """
-    response = test_client.get("/product/1")
+    product_data = {
+        "id": 100,
+        "title": "Product 1",
+        "price": 100.0,
+        "image": "https://site.com/foto.jpg",
+        "brand": "Marka 1",
+        "reviewScore": 9.1,
+    }
+    test_client.post(
+        "/product",
+        json=product_data
+    )
+    response = test_client.get("/product/100")
     json_response = response.json()
     assert response.status_code == 200
     assert json_response["status_code"] == 200
     assert json_response["response_type"] == resources.get("requests.success")
-    assert json_response["description"] == resources.get("product.product_retrived")
+    assert (
+        json_response["description"]
+        == resources.get("product.product_retrived")
+    )
 
 
 def test_get_product_data_nonexistent(test_client):
     """
     Testa a tentativa de recuperar dados de um produto inexistente.
     """
-    response = test_client.get("/product/999")
+    test_client.delete("/product/100")
+    response = test_client.get("/product/100")
     json_response = response.json()
     assert response.status_code == 404
-    assert json_response["detail"] == resources.get("product.product_not_exists")
+    assert (
+        json_response["detail"]
+        == resources.get("product.product_not_exists")
+    )
+
+
+def test_add_product(test_client):
+    """
+    Testa a adição de um novo produto.
+    """
+    test_client.delete("/product/100")
+    product_data = {
+        "id": 100,
+        "title": "Product 1",
+        "price": 100.0,
+        "image": "https://site.com/foto.jpg",
+        "brand": "Marka 1",
+        "reviewScore": 9.1,
+    }
+    response = test_client.post(
+        "/product",
+        json=product_data
+    )
+    json_response = response.json()
+    assert response.status_code == 200
+    assert json_response["response_type"] == resources.get("requests.success")
+    assert (
+        json_response["description"]
+        == resources.get("product.product_creates_request")
+    )
 
 
 def test_add_existing_product(test_client):
@@ -84,17 +112,21 @@ def test_add_existing_product(test_client):
     Testa a adição de um produto já existente.
     """
     product_data = {
-        "id": 1,
+        "id": 99,
         "title": "Teste",
         "price": 100.00,
         "image": "https://site.com/foto.jpg",
         "brand": "Marka",
         "reviewScore": 9.4,
     }
+    test_client.post("/product", json=product_data)
     response = test_client.post("/product", json=product_data)
     json_response = response.json()
     assert response.status_code == 409
-    assert json_response["detail"] == resources.get("product.product_already_exists")
+    assert (
+        json_response["detail"]
+        == resources.get("product.product_already_exists")
+    )
 
 
 def test_delete_product(test_client):
@@ -106,7 +138,10 @@ def test_delete_product(test_client):
     json_response = response.json()
     assert json_response["status_code"] == 200
     assert json_response["response_type"] == resources.get("requests.success")
-    assert json_response["description"] == resources.get("product.product_removed").format(id_to_delete)
+    assert (
+        json_response["description"]
+        == resources.get("product.product_removed").format(id_to_delete)
+    )
 
 
 def test_delete_nonexistent_product(test_client):
@@ -118,23 +153,30 @@ def test_delete_nonexistent_product(test_client):
     json_response = response.json()
     assert json_response["status_code"] == 404
     assert json_response["response_type"] == resources.get("requests.error")
-    assert json_response["description"] == resources.get("product.id_not_exists").format(id_to_delete)
+    assert (
+        json_response["description"]
+        == resources.get("product.id_not_exists").format(id_to_delete)
+    )
 
 
 def test_update_product(test_client):
     """
     Testa a atualização de um produto existente.
     """
+    id_to_update = 2
     update_data = {
         "name": "Updated Product",
         "price": 150.0,
     }
-    response = test_client.put("/product/2", json=update_data)
+    response = test_client.put(f"/product/{id_to_update}", json=update_data)
     json_response = response.json()
     assert response.status_code == 200
     assert json_response["status_code"] == 200
     assert json_response["response_type"] == resources.get("requests.success")
-    assert json_response["description"] == resources.get("product.product_updated").format(2)
+    assert (
+        json_response["description"]
+        == resources.get("product.product_updated").format(id_to_update)
+    )
 
 
 def test_update_nonexistent_product(test_client):
@@ -150,7 +192,10 @@ def test_update_nonexistent_product(test_client):
     response = test_client.put(f"/product/{id_to_update}", json=update_data)
     json_response = response.json()
     assert response.status_code == 404
-    assert json_response["detail"] == resources.get("product.product_not_found").format(id_to_update)
+    assert (
+        json_response["detail"]
+        == resources.get("product.product_not_found").format(id_to_update)
+    )
 
 
 def test_update_to_existing_product_id(test_client):
@@ -167,4 +212,7 @@ def test_update_to_existing_product_id(test_client):
     response = test_client.put(f"/product/{id_original}", json=update_data)
     json_response = response.json()
     assert response.status_code == 409
-    assert json_response["detail"] == resources.get("product.product_id_already_exists")
+    assert (
+        json_response["detail"]
+        == resources.get("product.product_id_already_exists")
+    )
