@@ -5,12 +5,14 @@ from pydantic import BaseModel, EmailStr
 
 
 class Client(Document):
+    id: int
     name: str
     email: EmailStr
 
     class Config:
         json_schema_extra = {
             "example": {
+                "id": 1,
                 "name": "Hortelã Leopoldo Muriel",
                 "email": "hortela_leopoldo@muriel.dev"
             }
@@ -21,6 +23,7 @@ class Client(Document):
 
 
 class ClientProjection(BaseModel):
+    id: int
     name: str
     email: EmailStr
 

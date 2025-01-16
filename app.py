@@ -2,9 +2,11 @@ from fastapi import Depends, FastAPI
 
 from auth.jwt_bearer import JWTBearer
 from config.config import initiate_database, shutdown_database
+
 from routes.client import router as ClientRouter
 from routes.product import router as ProductRouter
 from routes.user import router as UserRouter
+from routes.favorite import router as FavoriteRouter
 
 app = FastAPI()
 token_listener = JWTBearer()
@@ -26,6 +28,11 @@ def include_routers():
     app.include_router(
         ProductRouter,
         prefix="/product",
+        dependencies=[Depends(token_listener)]
+    )
+    app.include_router(
+        FavoriteRouter,
+        prefix="/favorite",
         dependencies=[Depends(token_listener)]
     )
 

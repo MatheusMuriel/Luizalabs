@@ -19,6 +19,16 @@
     "product_updated": "Product with ID: {} updated",
     "product_not_found": "An error occurred. Product with ID: {} not found"
   },
+  "favorites": {
+    "client_not_found": "No client found for id {}.",
+    "products_not_found": "No products found for id {}.",
+    "not_found": "No favorites found for client {}.",
+    "already_exists": "Product {} is already in the favorites.",
+    "added": "Product {} has been added to the favorites.",
+    "removed": "Product {} has been removed from the favorites.",
+    "not_found_for_product": "Product {} is not in the favorites.",
+    "retrieved": "Favorites retrieved successfully."
+  },  
   "requests": {
     "success": "success",
     "error": "error"
