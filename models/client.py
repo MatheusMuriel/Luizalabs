@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from beanie import Document
 from pydantic import BaseModel, EmailStr, Field

@@ -1,7 +1,7 @@
+from typing import Any, List, Union
+
 from beanie import Document
 from pydantic import BaseModel
-from typing import Any, List, Union
-from beanie import PydanticObjectId
 
 
 class Favorite(Document):

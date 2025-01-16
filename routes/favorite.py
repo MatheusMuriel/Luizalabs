@@ -1,9 +1,7 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException
 
 import database.favorite as DatabaseFavorite
-from models.favorite import Favorite, Response
-from models.client import Client
-from models.product import Product
+from models.favorite import Response
 from resources.resources import ResourceManager
 
 resources = ResourceManager()
@@ -25,20 +23,14 @@ async def get_favorites(client_id: int):
     Returns:
         list[Favorite]: List of favorite products.
     """
-    client = await Client.find_one({"id": client_id})
-    if not client:
-        raise HTTPException(
-            status_code=404,
-            detail=resources.get("client.not_found").format(client_id),
-        )
 
-    favorites = await DatabaseFavorite.get_favorites(client=client_id)
-    return {
-        "status_code": 200,
-        "response_type": resources.get("requests.success"),
-        "description": resources.get("favorites.retrieved"),
-        "data": favorites,
-    }
+    favorites = await DatabaseFavorite.get_favorites(client_id=client_id)
+    return Response(
+        status_code=200,
+        response_type=resources.get("requests.success"),
+        description=resources.get("favorites.retrieved"),
+        data=favorites,
+    )
 
 
 @router.post(
@@ -57,42 +49,22 @@ async def add_favorite(client_id: int, product_id: int):
     Returns:
         Response: The result of the operation.
     """
-    # client = await Client.find_one({"id": client_id})
-    # if not client:
-    #     raise HTTPException(
-    #         status_code=404,
-    #         detail=resources.get("client.not_found").format(client_id),
-    #     )
-
-    # product = await Product.find_one({"id": product_id})
-    # if not product:
-    #     raise HTTPException(
-    #         status_code=404,
-    #         detail=resources.get("product.not_found").format(product_id),
-    #     )
-
-    # existing_favorite = await Favorite.find_one(
-    #     {"client_id": client_id, "product_id": product_id}
-    # )
-    # if existing_favorite:
-    #     raise HTTPException(
-    #         status_code=409,
-    #         detail=resources.get("favorites.already_exists").format(product_id)
-    #     )
 
     new_favorite = await DatabaseFavorite.add_favorite(
         client_id=client_id,
         product_id=product_id
     )
-    
-    print(new_favorite)
 
-    return {
-        "status_code": 200,
-        "response_type": resources.get("requests.success"),
-        "description": resources.get("favorites.added").format(product_id),
-        "data": new_favorite,
-    }
+    new_favorite = new_favorite.dict()
+    if "id" in new_favorite:
+        new_favorite.pop("id")
+
+    return Response(
+        status_code=200,
+        response_type=resources.get("requests.success"),
+        description=resources.get("favorites.added").format(product_id),
+        data=new_favorite,
+    )
 
 
 @router.delete(
@@ -115,4 +87,15 @@ async def delete_favorite(client_id: int, product_id: int):
         client_id=client_id,
         product_id=product_id
     )
-    return response
+    if response:
+        return Response(
+            status_code=200,
+            response_type=resources.get("requests.success"),
+            description=resources.get("favorites.removed").format(product_id),
+            data=None
+        )
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail=resources.get("favorites.not_found").format(product_id),
+        )

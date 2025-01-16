@@ -1,5 +1,7 @@
-import uvicorn
 import sys
+
+import uvicorn
+
 from config.database.populate import populate_database
 from config.database.reset import reset_database
 
