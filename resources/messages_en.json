@@ -4,6 +4,18 @@
     "not_authenticated": "Not authenticated",
     "invalid_token": "Invalid token or expired token"
   },
+  "client": {
+    "client_retrived": "Client retrieved",
+    "client_not_exists": "Client doesn't exist",
+    "client_created": "Client registred",
+    "client_already_exists": "Client with this email supplied already exists",
+    "client_creates_request": "Client created successfully",
+    "client_deleted": "Client deleted from the database",
+    "client_removed": "Client with ID: {} removed",
+    "id_not_exists": "Cliente with id {} doesn't exist",
+    "client_updated": "Client with ID: {} updated",
+    "client_not_found": "An error occurred. Client with ID: {} not found"
+  },
   "product": {
     "out_of_pages": "Page not found. Requested page exceeds total pages.",
     "product_retrived": "Products data retrieved successfully",

@@ -2,13 +2,16 @@ from fastapi import APIRouter, Body, HTTPException
 
 import database.client as DatabaseClient
 from models.client import Client, Response, UpdateClientModel
+from resources.resources import ResourceManager
+
+resources = ResourceManager()
 
 router = APIRouter()
 
 
 @router.get(
     path="/",
-    response_description="Clients retrieved",
+    response_description=resources.get("client.client_retrived"),
     response_model=Response
 )
 async def get_clients():
@@ -20,17 +23,19 @@ async def get_clients():
         description, and the list of all clients.
     """
     clients = await DatabaseClient.list_clients()
-    return {
-        "status_code": 200,
-        "response_type": "success",
-        "description": "Clients data retrieved successfully",
-        "data": clients,
-    }
+    clients = [client.dict() for client in clients]
+
+    return Response(
+        status_code=200,
+        response_type=resources.get("requests.success"),
+        description=resources.get("client.client_retrived"),
+        data=clients
+    )
 
 
 @router.get(
     path="/{id}",
-    response_description="Client data retrieved",
+    response_description=resources.get("client.client_retrived"),
     response_model=Response
 )
 async def get_client_data(id: int):
@@ -46,23 +51,21 @@ async def get_client_data(id: int):
     """
     client = await DatabaseClient.get_client(id)
     if client:
-        return {
-            "status_code": 200,
-            "response_type": "success",
-            "description": "Client data retrieved successfully",
-            "data": client,
-        }
-    return {
-        "status_code": 404,
-        "response_type": "error",
-        "description": "Client doesn't exist",
-    }
+        return Response(
+            status_code=200,
+            response_type=resources.get("requests.success"),
+            description=resources.get("client.client_retrived"),
+            data=client.dict()
+        )
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("client.client_not_found").format(id)
+    )
 
 
-# Create Cliente
 @router.post(
     path="/",
-    response_description="Client registred",
+    response_description=resources.get("client.client_created"),
     response_model=Response
 )
 async def add_client_data(client: Client = Body(...)):
@@ -83,21 +86,21 @@ async def add_client_data(client: Client = Body(...)):
     if client_exists:
         raise HTTPException(
             status_code=409,
-            detail="Client with this email supplied already exists"
+            detail=resources.get("client.client_already_exists")
         )
 
     new_client = await DatabaseClient.add_client(client)
-    return {
-        "status_code": 200,
-        "response_type": "success",
-        "description": "Client created successfully",
-        "data": new_client,
-    }
+    return Response(
+        status_code=200,
+        response_type=resources.get("requests.success"),
+        description=resources.get("client.client_created"),
+        data=new_client
+    )
 
 
 @router.delete(
     path="/{id}",
-    response_description="Client data deleted from the database"
+    response_description=resources.get("client.client_deleted"),
 )
 async def delete_client_data(id: int):
     """
@@ -113,18 +116,16 @@ async def delete_client_data(id: int):
     """
     deleted_client = await DatabaseClient.delete_client(id)
     if deleted_client:
-        return {
-            "status_code": 200,
-            "response_type": "success",
-            "description": "Client with ID: {} removed".format(id),
-            "data": deleted_client,
-        }
-    return {
-        "status_code": 404,
-        "response_type": "error",
-        "description": "Client with id {0} doesn't exist".format(id),
-        "data": False,
-    }
+        return Response(
+            status_code=200,
+            response_type=resources.get("requests.success"),
+            description=resources.get("client.client_removed").format(id),
+            data=None
+        )
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("client.client_not_found").format(id)
+    )
 
 
 @router.put(
@@ -144,17 +145,16 @@ async def update_client(id: int, req: UpdateClientModel = Body(...)):
         description, and the updated cliente data or an error
         message if not found.
     """
-    updated_client = await DatabaseClient.update_client_data(id, req.dict())
+    updated_client = await DatabaseClient.update_client(id, req.dict())
     if updated_client:
-        return {
-            "status_code": 200,
-            "response_type": "success",
-            "description": f"Client with ID: {id} updated",
-            "data": updated_client,
-        }
-    return {
-        "status_code": 404,
-        "response_type": "error",
-        "description": f"An error occurred. Client with ID: {id} not found",
-        "data": False,
-    }
+        return Response(
+            status_code=200,
+            response_type=resources.get("requests.success"),
+            description=resources.get("client.client_updated").format(id),
+            data=updated_client.dict()
+        )
+
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("client.client_not_found").format(id)
+    )

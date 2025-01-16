@@ -1,11 +1,11 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union, List
 
 from beanie import Document
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class Client(Document):
-    id: int
+    id: int = Field(alias="_id")
     name: str
     email: EmailStr
 
@@ -13,8 +13,8 @@ class Client(Document):
         json_schema_extra = {
             "example": {
                 "id": 1,
-                "name": "Hortelã Leopoldo Muriel",
-                "email": "hortela_leopoldo@muriel.dev"
+                "name": "João Silva",
+                "email": "joao.silva@example.com"
             }
         }
 
@@ -22,17 +22,11 @@ class Client(Document):
         name = "clients"
 
 
-class ClientProjection(BaseModel):
-    id: int
-    name: str
-    email: EmailStr
-
-
 class Response(BaseModel):
     status_code: int
     response_type: str
     description: str
-    data: Optional[Any]
+    data: Optional[Union[Any, List[Any]]]
 
     class Config:
         json_schema_extra = {
@@ -40,7 +34,11 @@ class Response(BaseModel):
                 "status_code": 200,
                 "response_type": "success",
                 "description": "Operation successful",
-                "data": "Sample data",
+                "data": {
+                    "id": 1,
+                    "name": "João Silva",
+                    "email": "joao.silva@example.com"
+                }
             }
         }
 
@@ -49,13 +47,10 @@ class UpdateClientModel(BaseModel):
     name: Optional[str]
     email: Optional[EmailStr]
 
-    class Collection:
-        name = "cliente"
-
     class Config:
         json_schema_extra = {
             "example": {
-                "name": "Tete Popoldo Muriel",
-                "email": "tete@popoldo.cat"
+                "name": "Silvão Joilva",
+                "email": "silva.joao@exemple.com"
             }
         }
