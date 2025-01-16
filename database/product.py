@@ -33,13 +33,19 @@ async def list_products(page: int, page_size: int = 10) -> PaginatedProducts:
             detail=resources.get("product.out_of_pages")
         )
 
-    products = await product_collection.find().skip(to_skip).limit(page_size)
+    products = (
+        await product_collection
+        .find()
+        .skip(to_skip)
+        .limit(page_size)
+        .to_list()
+    )
     return PaginatedProducts(
         current_page=page,
         page_size=page_size,
         total_items=total_items,
-        total_pages=total_items / page_size,
-        products=products.to_list(),
+        total_pages=total_pages,
+        products=products,
     )
 
 
@@ -57,6 +63,11 @@ async def get_product(id: int) -> Product:
     product = await product_collection.get(id)
     if product:
         return product
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail=resources.get("product.product_not_exists")
+        )
 
 
 async def add_product(new_product: Product) -> Product:
@@ -89,26 +100,33 @@ async def delete_product(id: int) -> bool:
         return True
 
 
-async def update_product_data(id: int, data: dict) -> Union[bool, Product]:
+async def update_product_data(id_product: int, data: dict) -> Union[bool, Product]:
     """
     Update a product's data by its ID.
 
     Args:
-        id (int): The ID of the product to update.
+        id_product (int): The ID of the product to update.
         data (dict): The updated data for the product.
 
     Returns:
         Union[bool, Product]: The updated product if successful, or
         False if the product does not exist.
     """
-    des_body = {k: v for k, v in data.items() if v is not None}
-    update_query = {
-        "$set": {
-            field: value for field, value in des_body.items()
-        }
-    }
-    product = await product_collection.get(id)
+    if data["id"]:
+        if await product_collection.get(data["id"]):
+            raise HTTPException(
+                status_code=409,
+                detail=resources.get("product.product_id_already_exists")
+            )
+
+    product = await product_collection.get(id_product)
     if product:
+        des_body = {k: v for k, v in data.items() if v is not None}
+        update_query = {
+            "$set": {
+                field: value for field, value in des_body.items()
+            }
+        }
         await product.update(update_query)
         return product
     return False

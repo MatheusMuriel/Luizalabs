@@ -38,7 +38,6 @@ async def initiate_database():
         database=db_client.get_default_database(),
         document_models=models.__all__
     )
-    print("Conexão com o banco de dados estabelecida.")
 
 
 async def shutdown_database():
@@ -47,4 +46,3 @@ async def shutdown_database():
     """
     global db_client
     db_client.close()
-    print("Conexão com o banco de dados encerrada.")

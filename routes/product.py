@@ -98,7 +98,7 @@ async def add_product_data(product: Product = Body(...)):
 
     new_product = await DatabaseProduct.add_product(product)
     return {
-        "status_code": 200,
+        "status_code": 201,
         "response_type": resources.get("requests.success"),
         "description": resources.get("product.product_creates_request"),
         "data": new_product,
@@ -121,7 +121,7 @@ async def delete_product(id: int):
         description, and a flag indicating whether the product was deleted.
     """
 
-    deleted_product = await delete_product(id)
+    deleted_product = await DatabaseProduct.delete_product(id)
     if deleted_product:
         return {
             "status_code": 200,
@@ -138,15 +138,15 @@ async def delete_product(id: int):
 
 
 @router.put(
-    "/{id}",
+    "/{id_product}",
     response_model=Response
 )
-async def update_product(id: int, req: UpdateProductModel = Body(...)):
+async def update_product(id_product: int, req: UpdateProductModel = Body(...)):
     """
     Update an existing product by ID.
 
     Args:
-        id (int): The ID of the product to update.
+        id_product (int): The ID of the product to update.
         req (UpdateProductModel): The updated product data.
 
     Returns:
@@ -154,18 +154,15 @@ async def update_product(id: int, req: UpdateProductModel = Body(...)):
         description, and updated product data if successful. If not, an
         error message is returned.
     """
-
-    updated_product = await DatabaseProduct.update_product_data(id, req.dict())
+    updated_product = await DatabaseProduct.update_product_data(id_product, req.dict())
     if updated_product:
         return {
             "status_code": 200,
             "response_type": resources.get("requests.success"),
-            "description": resources.get("product.product_updated").format(id),
+            "description": resources.get("product.product_updated").format(id_product),
             "data": updated_product,
         }
-    return {
-        "status_code": 404,
-        "response_type": resources.get("requests.error"),
-        "description": resources.get("product.product_not_found").format(id),
-        "data": False,
-    }
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("product.product_not_found").format(id_product),
+    )

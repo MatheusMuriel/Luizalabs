@@ -11,12 +11,13 @@
     "product_not_exists": "Product doesn't exist",
     "product_created": "Product registred",
     "product_already_exists": "Product with this code supplied already exists",
+    "product_id_already_exists": "This product id was already exists",
     "product_creates_request": "Product created successfully",
     "product_deleted": "Product deleted from the database",
     "product_removed": "product with ID: {} removed",
-    "id_not_exists": "Cliente with id {0} doesn't exist",
+    "id_not_exists": "Cliente with id {} doesn't exist",
     "product_updated": "Product with ID: {} updated",
-    "product_not_found": "An error occurred. Product with ID: {id} not found"
+    "product_not_found": "An error occurred. Product with ID: {} not found"
   },
   "requests": {
     "success": "success",

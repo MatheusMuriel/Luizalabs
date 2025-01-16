@@ -110,13 +110,12 @@ class UpdateProductModel(BaseModel):
         brand (Optional[str]): The brand of the product.
         reviewScore (Optional[float]): The review score of the product.
     """
-
-    id: Optional[int]
-    title: Optional[str]
-    price: Optional[float]
-    image: Optional[str]
-    brand: Optional[str]
-    reviewScore: Optional[float]
+    id: Union[int, None] = None
+    title: Union[str, None] = None
+    price: Union[float, None] = None
+    image: Union[str, None] = None
+    brand: Union[str, None] = None
+    reviewScore: Union[float, None] = None
 
     class Collection:
         """
