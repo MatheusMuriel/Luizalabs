@@ -6,8 +6,8 @@ client_collection = Client
 
 
 async def list_clients() -> List[Client]:
-    clients = \
-        await client_collection.find_all().project(ClientProjection).to_list()
+    clients = await client_collection\
+        .find_all().project(ClientProjection).to_list()
     return clients
 
 

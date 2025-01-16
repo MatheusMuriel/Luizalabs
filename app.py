@@ -18,20 +18,24 @@ def include_routers():
     """
     app.include_router(
         UserRouter,
-        prefix="/user"
+        tags=["Auth"],
+        prefix="/auth"
     )
     app.include_router(
         ClientRouter,
+        tags=["Clients"],
         prefix="/client",
         dependencies=[Depends(token_listener)]
     )
     app.include_router(
         ProductRouter,
+        tags=["Products"],
         prefix="/product",
         dependencies=[Depends(token_listener)]
     )
     app.include_router(
         FavoriteRouter,
+        tags=["Favorites"],
         prefix="/favorite",
         dependencies=[Depends(token_listener)]
     )

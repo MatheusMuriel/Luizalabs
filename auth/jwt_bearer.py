@@ -47,8 +47,9 @@ class JWTBearer(HTTPBearer):
             an invalid credentials scheme, invalid token or missing token.
         """
 
-        credentials: HTTPAuthorizationCredentials = \
+        credentials: HTTPAuthorizationCredentials = (
             await super(JWTBearer, self).__call__(request)
+        )
 
         if credentials:
             if credentials.scheme == "Bearer":
