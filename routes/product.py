@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
 
-import database.product as DatabaseProduct
 import database.favorite as DatabaseFavorite
+import database.product as DatabaseProduct
 from models.product import Product, Response, UpdateProductModel
 from resources.resources import ResourceManager
 

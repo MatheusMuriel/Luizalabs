@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from beanie import Document
 from pydantic import BaseModel
@@ -24,7 +24,7 @@ class Response(BaseModel):
     status_code: int
     response_type: str
     description: str
-    data: Union[Any, List[Any]]
+    data: Union[str, Any]
 
     class Config:
         """

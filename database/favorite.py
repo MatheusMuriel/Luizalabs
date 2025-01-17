@@ -1,5 +1,7 @@
-from fastapi import HTTPException
 from typing import Optional
+
+from fastapi import HTTPException
+
 from database.client import client_collection
 from database.product import product_collection
 from models.favorite import Favorite
@@ -31,7 +33,12 @@ async def get_favorites(client_id: int) -> list[Favorite]:
     favorites = await favorites_collection\
         .find({"client_id": client_id}).to_list()
 
-    return favorites
+    product_ids = [favorite.dict()["product_id"] for favorite in favorites]
+    response = {
+        "client_id": client_id,
+        "favorites": product_ids
+    }
+    return response
 
 
 async def add_favorite(client_id: int, product_id: int) -> Favorite:

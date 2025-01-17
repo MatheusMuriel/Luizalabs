@@ -147,10 +147,9 @@ def test_delete_nonexistent_product(test_client):
     id_to_delete = 999998721
     response = test_client.delete(f"/product/{id_to_delete}")
     json_response = response.json()
-    assert json_response["status_code"] == 404
-    assert json_response["response_type"] == resources.get("requests.error")
+    assert response.status_code == 404
     assert (
-        json_response["description"]
+        json_response["detail"]
         == resources.get("product.id_not_exists").format(id_to_delete)
     )
 
