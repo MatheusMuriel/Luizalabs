@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
 
 import database.client as DatabaseClient
+import database.favorite as DatabaseFavorite
 from models.client import Client, Response, UpdateClientModel
 from resources.resources import ResourceManager
 
@@ -114,6 +115,11 @@ async def delete_client_data(id: int):
         description, and a confirmation of deletion or an error
         message if not found.
     """
+
+    # Antes de excluir o produto é necessário excluir os favoritos dele
+    # Fazendo sem transação por não ter os replicasets configurados
+    await DatabaseFavorite.delete_all_favorites(client_id=id)
+
     deleted_client = await DatabaseClient.delete_client(id)
     if deleted_client:
         return Response(

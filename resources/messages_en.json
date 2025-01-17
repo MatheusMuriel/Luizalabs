@@ -8,7 +8,7 @@
     "client_retrived": "Client retrieved",
     "client_not_exists": "Client doesn't exist",
     "client_created": "Client registred",
-    "client_already_exists": "Client with this email supplied already exists",
+    "client_already_exists": "Client with this email already exists",
     "client_creates_request": "Client created successfully",
     "client_deleted": "Client deleted from the database",
     "client_removed": "Client with ID: {} removed",
@@ -27,7 +27,7 @@
     "product_creates_request": "Product created successfully",
     "product_deleted": "Product deleted from the database",
     "product_removed": "product with ID: {} removed",
-    "id_not_exists": "Cliente with id {} doesn't exist",
+    "id_not_exists": "Product with id {} doesn't exist",
     "product_updated": "Product with ID: {} updated",
     "product_not_found": "An error occurred. Product with ID: {} not found"
   },

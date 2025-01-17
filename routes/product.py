@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
 
 import database.product as DatabaseProduct
+import database.favorite as DatabaseFavorite
 from models.product import Product, Response, UpdateProductModel
 from resources.resources import ResourceManager
 
@@ -62,11 +63,10 @@ async def get_product_data(id: int):
             "description": resources.get("product.product_retrived"),
             "data": product,
         }
-    return {
-        "status_code": 404,
-        "response_type": resources.get("requests.error"),
-        "description": resources.get("product.product_not_exists"),
-    }
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("product.product_not_exists")
+    )
 
 
 @router.post(
@@ -121,6 +121,10 @@ async def delete_product(id: int):
         description, and a flag indicating whether the product was deleted.
     """
 
+    # Antes de excluir o produto é necessário excluir os favoritos dele
+    # Fazendo sem transação por não ter os replicasets configurados
+    await DatabaseFavorite.delete_all_favorites(product_id=id)
+
     deleted_product = await DatabaseProduct.delete_product(id)
     if deleted_product:
         return {
@@ -129,12 +133,10 @@ async def delete_product(id: int):
             "description": resources.get("product.product_removed").format(id),
             "data": deleted_product,
         }
-    return {
-        "status_code": 404,
-        "response_type": resources.get("requests.error"),
-        "description": resources.get("product.id_not_exists").format(id),
-        "data": False,
-    }
+    raise HTTPException(
+        status_code=404,
+        detail=resources.get("product.id_not_exists").format(id),
+    )
 
 
 @router.put(

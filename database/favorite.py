@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-
+from typing import Optional
 from database.client import client_collection
 from database.product import product_collection
 from models.favorite import Favorite
@@ -106,5 +106,35 @@ async def delete_favorite(client_id: int, product_id: int) -> bool:
 
     # Remove the favorite
     await favorite_to_delete.delete()
+
+    return True
+
+
+async def delete_all_favorites(
+    client_id: Optional[int] = None,
+    product_id: Optional[int] = None
+) -> bool:
+    """
+    Removes all products from the clientes or products from the favorites list.
+
+    Args:
+        client (Client): The client removing the favorite.
+        product (Product): The product to be removed from favorites.
+
+    Returns:
+        bool: The result of the operation.
+    """
+
+    # Antes de excluir o produto é necessário excluir os favoritos dele
+    # Fazendo sem transação por não ter os replicasets configurados
+    query = {}
+    if client_id:
+        query = {"client_id": client_id}
+    elif product_id:
+        query = {"product_id": product_id}
+
+    favorites = await favorites_collection.find_many(query).to_list()
+    for favorite in favorites:
+        await favorite.delete()
 
     return True

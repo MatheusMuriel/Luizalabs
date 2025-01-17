@@ -96,6 +96,7 @@ async def delete_product(id: int) -> bool:
     Returns:
         bool: True if the product was deleted, False otherwise.
     """
+
     product = await product_collection.get(id)
     if product:
         await product.delete()

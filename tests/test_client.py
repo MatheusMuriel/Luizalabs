@@ -123,6 +123,43 @@ def test_add_existing_client(test_client):
     )
 
 
+def test_add_client_with_existing_email(test_client):
+    """
+    Testa a tentativa de cadastrar um cliente com um e-mail já existente.
+    """
+    client_id_1 = 1001
+    client_id_2 = 1002
+    email = "duplicate@example.com"
+
+    try:
+        # Prepara os dados
+        client_data_1 = get_default_client(client_id_1)
+        client_data_1["email"] = email
+        client_data_2 = get_default_client(client_id_2)
+        client_data_2["email"] = email
+
+        # Limpa os dados antes do teste
+        test_client.delete(f"/client/{client_id_1}")
+        test_client.delete(f"/client/{client_id_2}")
+
+        # Cadastra o primeiro cliente
+        response_1 = test_client.post("/client", json=client_data_1)
+        assert response_1.status_code == 200
+
+        # Tenta cadastrar o segundo cliente com o mesmo e-mail
+        response_2 = test_client.post("/client", json=client_data_2)
+        json_response_2 = response_2.json()
+        assert response_2.status_code == 409
+        assert (
+            json_response_2["detail"]
+            == resources.get("client.client_already_exists")
+        )
+    finally:
+        # Limpa os dados após o teste
+        test_client.delete(f"/client/{client_id_1}")
+        test_client.delete(f"/client/{client_id_2}")
+
+
 def test_delete_client(test_client):
     """
     Testa a exclusão de um cliente existente.

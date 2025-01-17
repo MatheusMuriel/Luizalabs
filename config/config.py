@@ -46,3 +46,8 @@ async def shutdown_database():
     """
     global db_client
     db_client.close()
+
+
+def get_db():
+    global db_client
+    return db_client
