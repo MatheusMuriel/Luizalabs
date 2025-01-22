@@ -1,6 +1,11 @@
+<div align="center">
+
+<img src="https://vagas.byintera.com/wp-content/uploads/2021/04/luiza-labs.1616501197-768x282.png" width="400px" />
+
 # Luizalabs Challenge
 
 Este projeto foi desenvolvido como parte de um desafio da Magalu/Luizalabs. O objetivo principal foi criar uma API para gerenciar clientes e seus produtos favoritos, com alguns diferenciais implementados para melhorar a escalabilidade, performance e usabilidade da solução.
+</div>
 
 ## Tecnologias Utilizadas
 
@@ -14,8 +19,10 @@ Este projeto foi desenvolvido como parte de um desafio da Magalu/Luizalabs. O ob
 
 1. **Geração de IDs**: Não é realizada pela API, ficando sob responsabilidade das partes que irão se integrar.
 2. **Endpoints de Produtos**: Devido à indisponibilidade da API de produtos, foi implementado um conjunto de endpoints para gerenciar produtos diretamente nesta solução.
-3. **Guidelines**: O desenvolvimento foi realizado seguindo os [guidelines da Luizalabs](https://github.com/luizalabs/dev-guide) e outras dicas publicadas no Medium da empresa, priorizando boas práticas de código e organização do projeto.
-4. Por se tratar de uma demonstração, o usuario e a senha de acesso a api estão no arquivo .env
+3. **Guidelines**: O desenvolvimento foi realizado seguindo os [guidelines da Luizalabs](https://github.com/luizalabs/dev-guide) e outras dicas publicadas no [Medium](https://medium.com/luizalabs) da empresa, priorizando boas práticas de código e organização do projeto.
+4. Por se tratar de uma demonstração, o usuario e a senha de acesso a api estão no arquivo `.env`
+5. **MongoDB**: Certifique-se de que o MongoDB está instalado e em execução na porta padrão **27017**. Caso queira usar outra porta, edite a URL de conexão no arquivo `.env`.
+
 
 ## Como Executar o Projeto
 
